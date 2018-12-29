@@ -9,6 +9,7 @@ services:
       - 8443:443
     volumes:
       - /root/sites/drone:/var/lib/drone/
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     environment:
       #- DRONE_DATABASE_DRIVER=mysql
