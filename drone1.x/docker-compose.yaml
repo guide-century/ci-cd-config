@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  drone-server:
+    image: drone/drone:1.0.0-rc.3
+
+    ports:
+      - 9000:80
+      - 8443:443
+    volumes:
+      - /root/sites/drone:/var/lib/drone/
+    restart: always
+    environment:
+      #- DRONE_DATABASE_DRIVER=mysql
+      #- DRONE_DATABASE_DATASOURCE=root:******@tcp(localhost:4040)/drone?parseTime=true
+      - DRONE_OPEN=true
+      - DRONE_SERVER_HOST=drone.*****.com
+      - DRONE_SERVER_PROTO=http
+      - DRONE_RUNNER_CAPACITY=1
+      - GITRA_PRIVATE_MODE=true
+      - DRONE_GITEA=true
+      - DRONE_GITEA_SERVER=http://my.gitea.com
+      - DRONE_SECRET=******
+
+  drone-agent:
+    image: drone/agent:1.0.0-rc.3
+
+    command: agent
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_SECRET=*****
